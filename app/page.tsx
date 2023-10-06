@@ -4,6 +4,7 @@ export default function Home() {
       <h1 className="h1-bold">Home</h1>
       <h1 className="h2-bold">Home</h1>
       <h1 className="h3-bold">Home</h1>
+      <h1 className="h3-bold">folder structure</h1>
     </div>
   );
 }
