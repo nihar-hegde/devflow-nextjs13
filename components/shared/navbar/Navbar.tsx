@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import Theme from "./Theme";
+import MobileNav from "./MobileNav";
 
 const Navbar = () => {
   return (
@@ -35,7 +36,7 @@ const Navbar = () => {
             afterSignOutUrl="/"
           />
         </SignedIn>
-        Mobile nav
+        <MobileNav />
       </div>
     </nav>
   );
