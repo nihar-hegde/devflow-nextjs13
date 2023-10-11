@@ -9,6 +9,7 @@ const HomeFilters = () => {
     <div className="mt-10 flex-wrap gap-3 md:flex ">
       {HomePageFilters.map((item) => (
         <Button
+        
           key={item.value}
           onClick={() => {}}
           className={`body-medium rounded-lg px-6 py-3 capitalize shadow-none ${
