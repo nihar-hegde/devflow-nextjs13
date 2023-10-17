@@ -58,9 +58,9 @@ export async function deleteUser(params: DeleteUserParams) {
     // delete everything that user ever done like questions,answers,comments etc.
 
     // ids user questions ids
-    const userQuestionIds = await Question.find({ author: user._id }).distinct(
-      "_id"
-    );
+    // const userQuestionIds = await Question.find({ author: user._id }).distinct(
+    //   "_id"
+    // );
     await Question.deleteMany({ author: user._id });
     // TODO Delte user answers comments and other things.
 
