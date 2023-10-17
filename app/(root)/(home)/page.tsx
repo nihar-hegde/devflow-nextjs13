@@ -8,94 +8,6 @@ import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const questions = [
-  {
-    _id: "1",
-    title: "What is nextjs?",
-    tags: [
-      { _id: "1", name: "nextjs" },
-      { _id: "2", name: "typescript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      picture: "url/to/picture",
-    },
-    upvotes: 10,
-    views: 20984357,
-    answers: [],
-    createdAt: new Date("2023-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: "2",
-    title: "How to install nextjs?",
-    tags: [
-      { _id: "1", name: "nextjs" },
-      { _id: "2", name: "typescript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      picture: "url/to/picture",
-    },
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2023-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: "3",
-    title: "How to install Typescript?",
-    tags: [
-      { _id: "1", name: "nextjs" },
-      { _id: "2", name: "typescript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      picture: "url/to/picture",
-    },
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2023-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: "4",
-    title: "What is typescript?",
-    tags: [
-      { _id: "1", name: "nextjs" },
-      { _id: "2", name: "typescript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      picture: "url/to/picture",
-    },
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2023-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: "5",
-    title: "What is ReactJS?",
-    tags: [
-      { _id: "1", name: "nextjs" },
-      { _id: "2", name: "typescript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      picture: "url/to/picture",
-    },
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2023-09-01T12:00:00.000Z"),
-  },
-];
-
 export default async function Home() {
   const result = await getQuestions({});
   console.log(result.questions);
@@ -131,8 +43,8 @@ export default async function Home() {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {/* Loop throught the questions  */}
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
