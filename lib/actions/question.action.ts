@@ -5,6 +5,8 @@ import { connectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
 import {
   CreateQuestionParams,
+  DeleteQuestionParams,
+  EditQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
@@ -12,6 +14,8 @@ import {
 // import { QuestionsSchema } from "../validations";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
@@ -148,6 +152,51 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     }
 
     // Increment author's reputation
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteQuestion(params: DeleteQuestionParams) {
+  try {
+    connectToDatabase();
+    const { questionId, path } = params;
+    // ! Delete the selected question.
+    await Question.deleteOne({ _id: questionId });
+    // ! Delete all the answers associated with the above question.
+    await Answer.deleteMany({ question: questionId });
+    // ! Delete all interactions related to the above question.
+    await Interaction.deleteMany({ question: questionId });
+    // ! Update the tags so that they no longer reference to the deleted questions
+    await Tag.updateMany(
+      { questions: questionId },
+      { $pull: { questions: questionId } }
+    );
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function editQuestions(params: EditQuestionParams) {
+  try {
+    connectToDatabase();
+    const { questionId, title, content, path } = params;
+
+    const question = await Question.findById(questionId).populate("tags");
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    question.title = title;
+    question.content = content;
+
+    await question.save();
 
     revalidatePath(path);
   } catch (error) {
