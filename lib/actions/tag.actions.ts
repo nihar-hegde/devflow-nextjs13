@@ -2,7 +2,11 @@
 
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
-import { GetAllTagsParams, GetQuestionsByTagIdParams, GetTopInteractedTagsParams } from "./shared.types";
+import {
+  GetAllTagsParams,
+  GetQuestionsByTagIdParams,
+  GetTopInteractedTagsParams,
+} from "./shared.types";
 import Tag, { ITag } from "@/database/tag.model";
 import Question from "@/database/question.model";
 import { FilterQuery } from "mongoose";
@@ -39,20 +43,19 @@ export async function getAllTags(params: GetAllTagsParams) {
   }
 }
 
-export async function getQuestionByTagId(params:GetQuestionsByTagIdParams){
+export async function getQuestionByTagId(params: GetQuestionsByTagIdParams) {
   try {
     connectToDatabase();
 
-    const {tagId,page=1,pageSize=10, searchQuery} = params;
-     const tagFilter : FilterQuery<ITag> = {_id:tagId};
-    
+    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
     const tag = await Tag.findOne(tagFilter).populate({
       path: "questions",
-      model:Question,
-      match:searchQuery
-      ? {title:{$regex:searchQuery, $options:'i'}}
-      : {},
+      model: Question,
+      match: searchQuery
+        ? { title: { $regex: searchQuery, $options: "i" } }
+        : {},
       options: {
         sort: { createdAt: -1 },
       },
@@ -68,8 +71,21 @@ export async function getQuestionByTagId(params:GetQuestionsByTagIdParams){
 
     const questions = tag.questions;
 
-    return { tagTitle:tag.name,questions };
-
+    return { tagTitle: tag.name, questions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+export async function getTopPopularTags() {
+  try {
+    connectToDatabase();
+    const popularTags = await Tag.aggregate([
+      { $project: { name: 1, numberOfQuestions: { $size: "$questions" } } },
+      { $sort: { numberOfQuestions: -1 } },
+      { $limit: 5 },
+    ]);
+    return popularTags;
   } catch (error) {
     console.log(error);
     throw error;
