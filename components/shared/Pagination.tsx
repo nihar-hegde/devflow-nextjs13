@@ -25,6 +25,8 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
     router.push(newUrl);
   };
 
+  if (!isNext && pageNumber === 1) return null; // hide pagination component if there is only one page
+
   return (
     <div className="flex w-full items-center justify-center gap-2">
       <Button
