@@ -1,15 +1,17 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+
 import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import GlobalResult from "./GlobalResult";
+
 const GlobalSearch = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const searchContainerRef = useRef();
+  const searchContainerRef = useRef(null);
 
   const query = searchParams.get("q");
 
@@ -27,8 +29,11 @@ const GlobalSearch = () => {
         setSearch("");
       }
     };
+
     setIsOpen(false);
+
     document.addEventListener("click", handleOutsideClick);
+
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
@@ -42,6 +47,7 @@ const GlobalSearch = () => {
           key: "global",
           value: search,
         });
+
         router.push(newUrl, { scroll: false });
       } else {
         if (query) {
@@ -49,10 +55,12 @@ const GlobalSearch = () => {
             params: searchParams.toString(),
             keysToRemove: ["global", "type"],
           });
+
           router.push(newUrl, { scroll: false });
         }
       }
     }, 300);
+
     return () => clearTimeout(delayDebounceFn);
   }, [search, router, pathname, searchParams, query]);
 
@@ -69,16 +77,18 @@ const GlobalSearch = () => {
           height={24}
           className="cursor-pointer"
         />
+
         <Input
           type="text"
-          placeholder="Search Globally"
+          placeholder="Search globally"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
+
             if (!isOpen) setIsOpen(true);
             if (e.target.value === "" && isOpen) setIsOpen(false);
           }}
-          className="paragraph-regular no-focus placeholder text-dark400_light700  border-none bg-transparent shadow-none outline-none"
+          className="paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
         />
       </div>
       {isOpen && <GlobalResult />}
